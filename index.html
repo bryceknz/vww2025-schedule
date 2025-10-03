@@ -129,6 +129,15 @@
       let deferredPrompt;
       let installPromptShown = false;
 
+      // Check if app is already installed
+      function isAppInstalled() {
+        return (
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.navigator.standalone === true ||
+          document.referrer.includes('android-app://')
+        );
+      }
+
       // Create popup elements
       const popupOverlay = document.createElement('div');
       popupOverlay.className = 'install-popup-overlay';
@@ -147,7 +156,6 @@
       // Add popup to overlay
       popupOverlay.appendChild(popup);
       document.body.appendChild(popupOverlay);
-      console.log('Install popup elements created and added to DOM');
 
       // Popup button handlers
       document.addEventListener('click', async e => {
@@ -155,7 +163,6 @@
           if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
             deferredPrompt = null;
           }
           hideInstallPopup();
@@ -168,7 +175,7 @@
 
       // Show popup function
       function showInstallPopup() {
-        if (installPromptShown) return;
+        if (installPromptShown || isAppInstalled()) return;
         installPromptShown = true;
         popupOverlay.style.display = 'block';
         popup.style.display = 'block';
@@ -191,35 +198,23 @@
       window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault();
         deferredPrompt = e;
-        console.log('Install prompt available');
 
         // Show popup after a short delay to let the page load
         setTimeout(() => {
-          showInstallPopup();
+          if (!isAppInstalled()) {
+            showInstallPopup();
+          }
         }, 2000);
       });
 
-      // For testing: Show popup after page load even without install prompt
+      // Check on page load if app is already installed
       window.addEventListener('load', () => {
-        setTimeout(() => {
-          if (!deferredPrompt) {
-            console.log(
-              'No install prompt available, showing popup for testing'
-            );
-
-            // For testing: Show popup once after 2 seconds
-            setTimeout(() => {
-              if (!installPromptShown) {
-                console.log('Showing test popup');
-                showInstallPopup();
-              }
-            }, 2000);
-          }
-        }, 1000);
+        if (isAppInstalled()) {
+          hideInstallPopup();
+        }
       });
 
       window.addEventListener('appinstalled', () => {
-        console.log('PWA was installed');
         hideInstallPopup();
       });
     </script>
