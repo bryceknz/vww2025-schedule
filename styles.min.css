@@ -269,7 +269,6 @@ select:focus {
 }
 .footer {
   text-align: center;
-  margin-top: 40px;
   padding: 20px;
   color: var(--text-secondary);
   font-size: 0.9rem;
