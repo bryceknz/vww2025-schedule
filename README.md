@@ -1,6 +1,6 @@
-# VWW 2025 Festival Schedule
+# Vegan Wellbeing Weekend 2025 Schedule
 
-A simple, responsive web app for navigating the VWW 2025 Festival schedule.
+A simple, responsive web app for navigating the Vegan Wellbeing Weekend 2025 schedule.
 
 ## Features
 
