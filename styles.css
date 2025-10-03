@@ -79,10 +79,9 @@ h1 {
   opacity: 0.9;
 }
 
-.dark-mode-toggle {
+/* Header toggle buttons - shared styles */
+.header-toggle {
   position: absolute;
-  top: 20px;
-  right: 20px;
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
@@ -96,19 +95,34 @@ h1 {
   backdrop-filter: blur(10px);
 }
 
-.dark-mode-toggle:hover {
+.header-toggle:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
   transform: scale(1.1);
 }
 
-.toggle-icon {
+.header-toggle-icon {
   font-size: 1.5rem;
   transition: transform 0.3s ease;
 }
 
-.dark-mode-toggle:hover .toggle-icon {
+/* Specific positioning for each toggle */
+.dark-mode-toggle {
+  top: 20px;
+  right: 20px;
+}
+
+.dark-mode-toggle:hover .header-toggle-icon {
   transform: rotate(20deg);
+}
+
+.time-format-toggle {
+  top: 80px;
+  right: 20px;
+}
+
+.time-format-toggle:hover .header-toggle-icon {
+  transform: rotate(10deg);
 }
 
 .controls {
@@ -151,38 +165,6 @@ select:focus,
 input:focus {
   outline: none;
   border-color: #667eea;
-}
-
-.time-format-toggle {
-  position: absolute;
-  top: 80px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.time-format-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.1);
-}
-
-.time-format-icon {
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.time-format-toggle:hover .time-format-icon {
-  transform: rotate(10deg);
 }
 
 .search-box {
@@ -340,26 +322,23 @@ input:focus {
     font-size: 2rem;
   }
 
-  .time-format-toggle {
+  .header-toggle {
     width: 40px;
     height: 40px;
+  }
+
+  .header-toggle-icon {
+    font-size: 1.2rem;
+  }
+
+  .time-format-toggle {
     top: 65px;
     right: 15px;
   }
 
-  .time-format-icon {
-    font-size: 1.2rem;
-  }
-
   .dark-mode-toggle {
-    width: 40px;
-    height: 40px;
     top: 15px;
     right: 15px;
-  }
-
-  .toggle-icon {
-    font-size: 1.2rem;
   }
 
   .controls {

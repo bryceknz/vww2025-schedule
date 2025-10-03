@@ -4,7 +4,7 @@
 class TimeFormat {
   constructor() {
     this.toggleButton = document.getElementById('timeFormatToggle');
-    this.toggleIcon = this.toggleButton?.querySelector('.time-format-icon');
+    this.toggleIcon = this.toggleButton?.querySelector('.header-toggle-icon');
     this.storageKey = 'vww2026-time-format';
     this.currentFormat = '12hr'; // Default to 12-hour format
     this.init();
@@ -115,7 +115,7 @@ class TimeFormat {
 class DarkMode {
   constructor() {
     this.toggleButton = document.getElementById('darkModeToggle');
-    this.toggleIcon = this.toggleButton?.querySelector('.toggle-icon');
+    this.toggleIcon = this.toggleButton?.querySelector('.header-toggle-icon');
     this.storageKey = 'vww2026-theme-preference';
     this.init();
   }
