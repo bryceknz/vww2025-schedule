@@ -1,5 +1,69 @@
 // Festival Schedule App - Main JavaScript functionality
 
+// Dark Mode functionality
+class DarkMode {
+  constructor() {
+    this.toggleButton = document.getElementById('darkModeToggle');
+    this.toggleIcon = this.toggleButton?.querySelector('.toggle-icon');
+    this.storageKey = 'vww2026-theme-preference';
+    this.init();
+  }
+
+  init() {
+    if (!this.toggleButton) return;
+
+    // Set initial theme based on stored preference or system preference
+    this.setInitialTheme();
+
+    // Add event listener for toggle button
+    this.toggleButton.addEventListener('click', () => this.toggleTheme());
+
+    // Listen for system theme changes
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', e => {
+        if (!this.hasStoredPreference()) {
+          this.applyTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+  }
+
+  setInitialTheme() {
+    const storedPreference = localStorage.getItem(this.storageKey);
+
+    if (storedPreference) {
+      // User has a stored preference
+      this.applyTheme(storedPreference);
+    } else {
+      // Use system preference
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches;
+      this.applyTheme(prefersDark ? 'dark' : 'light');
+    }
+  }
+
+  toggleTheme() {
+    const currentTheme =
+      document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    this.applyTheme(newTheme);
+    localStorage.setItem(this.storageKey, newTheme);
+  }
+
+  applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+
+    if (this.toggleIcon) {
+      this.toggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+  }
+
+  hasStoredPreference() {
+    return localStorage.getItem(this.storageKey) !== null;
+  }
+}
+
 // Helper function to convert 12-hour time to 24-hour format
 function convertTo24Hour(time12h) {
   // Handle time ranges (e.g., "10:00 AM - 5:00 PM")
@@ -186,6 +250,9 @@ function populateCategoryFilter() {
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
+  // Initialize dark mode
+  new DarkMode();
+
   // Populate filters
   populateLocationFilter();
   populateCategoryFilter();
