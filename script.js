@@ -434,36 +434,16 @@ function filterEvents() {
   renderSchedule(filtered);
 }
 
-// Update day filter to hide past days
+// Update day filter to show all days (including past ones)
 function updateDayFilter() {
   const dayFilter = document.getElementById('dayFilter');
-  const now = new Date();
-  const currentDayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-  // Convert JavaScript day to festival day (1-based indexing)
-  // JavaScript: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-  // Festival: 1=Fri, 2=Sat, 3=Sun, 4=All Weekend
-  const jsToFestivalDay = {
-    5: 1, // Friday
-    6: 2, // Saturday
-    0: 3, // Sunday
-  };
-
-  const currentFestivalDay = jsToFestivalDay[currentDayOfWeek];
-
-  // Map day names to festival day numbers (1-based indexing)
-  const dayMap = {
-    friday: 1, // Friday = 1
-    saturday: 2, // Saturday = 2
-    sunday: 3, // Sunday = 3
-  };
 
   // Clear existing options except "All Days"
   const allDaysOption = dayFilter.querySelector('option[value="all"]');
   dayFilter.innerHTML = '';
   dayFilter.appendChild(allDaysOption);
 
-  // Add day options, hiding past days
+  // Add all day options (including past days)
   const dayOptions = [
     { value: 'friday', label: 'Friday' },
     { value: 'saturday', label: 'Saturday' },
@@ -471,16 +451,10 @@ function updateDayFilter() {
   ];
 
   dayOptions.forEach(day => {
-    const eventDay = dayMap[day.value];
-
-    // Only show the day if it's today or in the future
-    // If current day is not a festival day (Mon-Thu), show all days
-    if (currentFestivalDay === undefined || currentFestivalDay <= eventDay) {
-      const option = document.createElement('option');
-      option.value = day.value;
-      option.textContent = day.label;
-      dayFilter.appendChild(option);
-    }
+    const option = document.createElement('option');
+    option.value = day.value;
+    option.textContent = day.label;
+    dayFilter.appendChild(option);
   });
 }
 

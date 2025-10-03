@@ -333,10 +333,9 @@ const events = [
   {
     day: 'sunday',
     time: '9:00 AM',
-    title: 'Magic Mushroom Making',
+    title: 'Magic Mushroom Making Workshop',
     location: 'potting-shed',
     category: 'Arts & Crafts',
-    description: 'Magic mushroom making workshop.',
   },
   {
     day: 'sunday',
