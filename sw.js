@@ -1,8 +1,9 @@
 // Service Worker for Vegan Wellbeing Weekend 2025 PWA
+// Optimized for venues with poor internet connectivity
 const CACHE_NAME = 'vww2025-v1.0.0';
 const OFFLINE_URL = 'offline.html';
 
-// Files to cache for offline use
+// Files to cache for offline use - ALL critical files
 const STATIC_CACHE_URLS = [
   '/',
   '/index.html',
@@ -13,24 +14,38 @@ const STATIC_CACHE_URLS = [
   '/locations.js',
   '/offline.html',
   '/manifest.json',
+  // Cache all icons for offline use
+  '/icons/icon-16x16.png',
+  '/icons/icon-32x32.png',
+  '/icons/icon-72x72.png',
+  '/icons/icon-96x96.png',
+  '/icons/icon-128x128.png',
+  '/icons/icon-144x144.png',
+  '/icons/icon-152x152.png',
+  '/icons/icon-192x192.png',
+  '/icons/icon-384x384.png',
+  '/icons/icon-512x512.png',
 ];
 
-// Install event - cache static assets
+// Install event - AGGRESSIVELY cache ALL static assets for poor connectivity
 self.addEventListener('install', event => {
-  console.log('Service Worker installing...');
+  console.log('🚀 Service Worker installing for poor connectivity venue...');
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then(cache => {
-        console.log('Caching static assets');
+        console.log('📦 Caching ALL static assets for offline use');
         return cache.addAll(STATIC_CACHE_URLS);
       })
       .then(() => {
-        console.log('Static assets cached successfully');
+        console.log('✅ ALL static assets cached successfully - app ready for offline use');
+        // Force activation immediately
         return self.skipWaiting();
       })
       .catch(error => {
-        console.error('Failed to cache static assets:', error);
+        console.error('❌ CRITICAL: Failed to cache static assets:', error);
+        // Even if caching fails, still activate the service worker
+        return self.skipWaiting();
       })
   );
 });
@@ -58,7 +73,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event - CACHE FIRST strategy for poor connectivity venues
 self.addEventListener('fetch', event => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') {
@@ -72,43 +87,69 @@ self.addEventListener('fetch', event => {
 
   event.respondWith(
     caches.match(event.request).then(response => {
-      // Return cached version if available
+      // ALWAYS return cached version if available (Cache First strategy)
       if (response) {
-        console.log('Serving from cache:', event.request.url);
+        console.log('✅ Serving from cache:', event.request.url);
+        
+        // Try to update cache in background (stale-while-revalidate)
+        fetch(event.request)
+          .then(fetchResponse => {
+            if (fetchResponse && fetchResponse.status === 200 && fetchResponse.type === 'basic') {
+              const responseToCache = fetchResponse.clone();
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseToCache);
+                console.log('🔄 Background cache update:', event.request.url);
+              });
+            }
+          })
+          .catch(error => {
+            console.log('⚠️ Background update failed (using cached version):', event.request.url);
+          });
+        
         return response;
       }
 
-      // Otherwise, fetch from network
-      console.log('Fetching from network:', event.request.url);
+      // If not in cache, try network but don't fail if network is bad
+      console.log('🌐 Not in cache, trying network:', event.request.url);
       return fetch(event.request)
         .then(response => {
-          // Don't cache non-successful responses
-          if (
-            !response ||
-            response.status !== 200 ||
-            response.type !== 'basic'
-          ) {
-            return response;
+          // Only cache successful responses
+          if (response && response.status === 200 && response.type === 'basic') {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+              console.log('💾 Cached new resource:', event.request.url);
+            });
           }
-
-          // Clone the response for caching
-          const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseToCache);
-          });
-
           return response;
         })
         .catch(error => {
-          console.log('Network request failed:', event.request.url);
+          console.log('❌ Network failed:', event.request.url);
 
-          // If it's a navigation request, show offline page
+          // For navigation requests, show offline page
           if (event.request.mode === 'navigate') {
-            return caches.match(OFFLINE_URL);
+            return caches.match(OFFLINE_URL) || caches.match('/index.html');
           }
 
-          // For other requests, you might want to return a custom offline response
+          // For other requests, try to return a fallback or show offline page
+          if (event.request.url.includes('.html')) {
+            return caches.match('/index.html');
+          }
+          
+          // For CSS/JS files, return a basic response to prevent app breaking
+          if (event.request.url.includes('.css')) {
+            return new Response('/* Offline - styles cached */', {
+              headers: { 'Content-Type': 'text/css' }
+            });
+          }
+          
+          if (event.request.url.includes('.js')) {
+            return new Response('// Offline - scripts cached', {
+              headers: { 'Content-Type': 'application/javascript' }
+            });
+          }
+
+          // For everything else, throw error
           throw error;
         });
     })
