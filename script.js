@@ -172,9 +172,16 @@ class DarkMode {
   }
 
   toggleTheme() {
-    const currentTheme =
-      document.documentElement.getAttribute('data-theme') || 'light';
+    // Get current theme, considering both data-theme attribute and system preference
+    const dataTheme = document.documentElement.getAttribute('data-theme');
+    const systemPrefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+
+    // Determine current theme: explicit data-theme takes precedence, otherwise use system preference
+    const currentTheme = dataTheme || (systemPrefersDark ? 'dark' : 'light');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
     this.applyTheme(newTheme);
     localStorage.setItem(this.storageKey, newTheme);
 
