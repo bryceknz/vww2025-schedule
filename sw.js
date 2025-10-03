@@ -38,7 +38,9 @@ self.addEventListener('install', event => {
         return cache.addAll(STATIC_CACHE_URLS);
       })
       .then(() => {
-        console.log('✅ ALL static assets cached successfully - app ready for offline use');
+        console.log(
+          '✅ ALL static assets cached successfully - app ready for offline use'
+        );
         // Force activation immediately
         return self.skipWaiting();
       })
@@ -90,11 +92,15 @@ self.addEventListener('fetch', event => {
       // ALWAYS return cached version if available (Cache First strategy)
       if (response) {
         console.log('✅ Serving from cache:', event.request.url);
-        
+
         // Try to update cache in background (stale-while-revalidate)
         fetch(event.request)
           .then(fetchResponse => {
-            if (fetchResponse && fetchResponse.status === 200 && fetchResponse.type === 'basic') {
+            if (
+              fetchResponse &&
+              fetchResponse.status === 200 &&
+              fetchResponse.type === 'basic'
+            ) {
               const responseToCache = fetchResponse.clone();
               caches.open(CACHE_NAME).then(cache => {
                 cache.put(event.request, responseToCache);
@@ -103,9 +109,12 @@ self.addEventListener('fetch', event => {
             }
           })
           .catch(error => {
-            console.log('⚠️ Background update failed (using cached version):', event.request.url);
+            console.log(
+              '⚠️ Background update failed (using cached version):',
+              event.request.url
+            );
           });
-        
+
         return response;
       }
 
@@ -114,7 +123,11 @@ self.addEventListener('fetch', event => {
       return fetch(event.request)
         .then(response => {
           // Only cache successful responses
-          if (response && response.status === 200 && response.type === 'basic') {
+          if (
+            response &&
+            response.status === 200 &&
+            response.type === 'basic'
+          ) {
             const responseToCache = response.clone();
             caches.open(CACHE_NAME).then(cache => {
               cache.put(event.request, responseToCache);
@@ -135,17 +148,17 @@ self.addEventListener('fetch', event => {
           if (event.request.url.includes('.html')) {
             return caches.match('/index.html');
           }
-          
+
           // For CSS/JS files, return a basic response to prevent app breaking
           if (event.request.url.includes('.css')) {
             return new Response('/* Offline - styles cached */', {
-              headers: { 'Content-Type': 'text/css' }
+              headers: { 'Content-Type': 'text/css' },
             });
           }
-          
+
           if (event.request.url.includes('.js')) {
             return new Response('// Offline - scripts cached', {
-              headers: { 'Content-Type': 'application/javascript' }
+              headers: { 'Content-Type': 'application/javascript' },
             });
           }
 

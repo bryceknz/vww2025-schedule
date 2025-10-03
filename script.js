@@ -420,7 +420,7 @@ function filterEvents() {
         locationMap[event.location].toLowerCase().includes(searchTerm)) ||
       (event.category &&
         getCategoryName(event.category).toLowerCase().includes(searchTerm));
-    
+
     // Only filter out past events when showing "All Days"
     // When user manually selects a specific day, show ALL events for that day
     const isNotPast = dayFilter === 'all' ? !isEventPast(event) : true;
