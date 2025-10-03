@@ -439,6 +439,43 @@ input:focus {
   background: var(--hover-bg);
 }
 
+/* iOS Instructions Styles */
+.ios-instructions {
+  text-align: left;
+  margin: 20px 0;
+  padding: 0;
+}
+
+.instruction-step {
+  display: flex;
+  align-items: flex-start;
+  margin: 15px 0;
+  padding: 0;
+}
+
+.step-number {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-right: 12px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.instruction-step span:last-child {
+  color: var(--text-primary);
+  line-height: 1.4;
+  flex: 1;
+}
+
+
 @keyframes popupFadeIn {
   from {
     opacity: 0;
