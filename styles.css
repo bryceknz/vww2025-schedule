@@ -360,3 +360,113 @@ input:focus {
   font-size: 0.9rem;
   transition: color 0.3s ease;
 }
+
+/* Install Popup Styles */
+.install-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-secondary);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  border: 2px solid var(--border-color);
+  display: none;
+  animation: popupFadeIn 0.3s ease-out;
+}
+
+.install-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1999;
+  display: none;
+  animation: overlayFadeIn 0.3s ease-out;
+}
+
+.install-popup h3 {
+  margin: 0 0 15px 0;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+}
+
+.install-popup p {
+  margin: 0 0 25px 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.install-popup-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.install-popup-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.install-popup-button.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.install-popup-button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.install-popup-button.secondary {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.install-popup-button.secondary:hover {
+  background: var(--hover-bg);
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .install-popup {
+    padding: 25px 20px;
+    max-width: 350px;
+  }
+
+  .install-popup-buttons {
+    flex-direction: column;
+  }
+}

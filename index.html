@@ -32,7 +32,7 @@
     />
 
     <title>Vegan Wellbeing Weekend 2025 Schedule</title>
-    <link rel="stylesheet" href="styles.min.css?v=1.0" />
+    <link rel="stylesheet" href="styles.min.css?v=1.1" />
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>
@@ -124,48 +124,100 @@
 
       // PWA Install Prompt
       let deferredPrompt;
-      const installButton = document.createElement('button');
-      installButton.textContent = '📱 Install App';
-      installButton.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 1000;
-        transition: all 0.3s ease;
+      let installPromptShown = false;
+
+      // Create popup elements
+      const popupOverlay = document.createElement('div');
+      popupOverlay.className = 'install-popup-overlay';
+
+      const popup = document.createElement('div');
+      popup.className = 'install-popup';
+      popup.innerHTML = `
+        <h3>Save for Offline Use</h3>
+        <p>Install this app to access the schedule even when you're offline. Perfect for the festival weekend!</p>
+        <div class="install-popup-buttons">
+          <button class="install-popup-button primary" id="installConfirm">Save Offline</button>
+          <button class="install-popup-button secondary" id="installCancel">Maybe Later</button>
+        </div>
       `;
 
-      installButton.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          console.log(`User response to the install prompt: ${outcome}`);
-          deferredPrompt = null;
-          installButton.style.display = 'none';
+      // Add popup to overlay
+      popupOverlay.appendChild(popup);
+      document.body.appendChild(popupOverlay);
+      console.log('Install popup elements created and added to DOM');
+
+      // Popup button handlers
+      document.addEventListener('click', async e => {
+        if (e.target.id === 'installConfirm') {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            deferredPrompt = null;
+          }
+          hideInstallPopup();
+        } else if (e.target.id === 'installCancel') {
+          hideInstallPopup();
+        } else if (e.target === popupOverlay) {
+          hideInstallPopup();
         }
       });
 
+      // Show popup function
+      function showInstallPopup() {
+        if (installPromptShown) return;
+        installPromptShown = true;
+        popupOverlay.style.display = 'block';
+        popup.style.display = 'block';
+
+        // Auto-hide after 10 seconds if user doesn't interact
+        setTimeout(() => {
+          if (popupOverlay.style.display === 'block') {
+            hideInstallPopup();
+          }
+        }, 10000);
+      }
+
+      // Hide popup function
+      function hideInstallPopup() {
+        popupOverlay.style.display = 'none';
+        popup.style.display = 'none';
+      }
+
+      // Listen for install prompt
       window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault();
         deferredPrompt = e;
-        installButton.style.display = 'flex';
-        document.body.appendChild(installButton);
+        console.log('Install prompt available');
+
+        // Show popup after a short delay to let the page load
+        setTimeout(() => {
+          showInstallPopup();
+        }, 2000);
+      });
+
+      // For testing: Show popup after page load even without install prompt
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          if (!deferredPrompt) {
+            console.log(
+              'No install prompt available, showing popup for testing'
+            );
+
+            // For testing: Show popup once after 2 seconds
+            setTimeout(() => {
+              if (!installPromptShown) {
+                console.log('Showing test popup');
+                showInstallPopup();
+              }
+            }, 2000);
+          }
+        }, 1000);
       });
 
       window.addEventListener('appinstalled', () => {
         console.log('PWA was installed');
-        installButton.style.display = 'none';
+        hideInstallPopup();
       });
     </script>
   </body>
