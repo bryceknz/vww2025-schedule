@@ -1,5 +1,116 @@
 // Festival Schedule App - Main JavaScript functionality
 
+// Time Format functionality
+class TimeFormat {
+  constructor() {
+    this.toggleButton = document.getElementById('timeFormatToggle');
+    this.toggleIcon = this.toggleButton?.querySelector('.time-format-icon');
+    this.storageKey = 'vww2026-time-format';
+    this.currentFormat = '12hr'; // Default to 12-hour format
+    this.init();
+  }
+
+  init() {
+    if (!this.toggleButton) return;
+
+    // Set initial format based on stored preference
+    this.setInitialFormat();
+
+    // Add event listener for toggle button
+    this.toggleButton.addEventListener('click', () => this.toggleFormat());
+  }
+
+  setInitialFormat() {
+    const storedFormat = localStorage.getItem(this.storageKey);
+
+    if (storedFormat) {
+      this.currentFormat = storedFormat;
+    }
+
+    this.updateButtonDisplay();
+  }
+
+  toggleFormat() {
+    this.currentFormat = this.currentFormat === '12hr' ? '24hr' : '12hr';
+    this.updateButtonDisplay();
+    localStorage.setItem(this.storageKey, this.currentFormat);
+
+    // Re-render the schedule with new time format
+    filterEvents();
+  }
+
+  updateButtonDisplay() {
+    if (this.toggleIcon) {
+      // Static text showing both formats
+      this.toggleIcon.textContent = '🕐';
+    }
+  }
+
+  formatTime(timeString) {
+    if (this.currentFormat === '24hr') {
+      return this.formatTo24Hour(timeString);
+    } else {
+      return this.formatTo12Hour(timeString);
+    }
+  }
+
+  formatTo24Hour(timeString) {
+    // Handle time ranges (e.g., "10:00 AM - 5:00 PM")
+    if (timeString.includes(' - ')) {
+      const [start, end] = timeString.split(' - ');
+      return `${this.formatTo24Hour(start)} - ${this.formatTo24Hour(end)}`;
+    }
+
+    // Handle special cases
+    if (timeString === 'After Dark') return '23:00';
+    if (timeString === 'All Weekend') return '00:00';
+    if (timeString === 'midnight') return '00:00';
+    if (timeString.includes('Saturday')) return '10:00';
+
+    // Parse 12-hour format
+    const match = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (!match) return timeString;
+
+    let hour = parseInt(match[1]);
+    const minute = match[2];
+    const ampm = match[3].toUpperCase();
+
+    // Convert to 24-hour format
+    if (ampm === 'PM' && hour !== 12) hour += 12;
+    if (ampm === 'AM' && hour === 12) hour = 0;
+
+    return `${hour.toString().padStart(2, '0')}:${minute}`;
+  }
+
+  formatTo12Hour(timeString) {
+    // Handle time ranges
+    if (timeString.includes(' - ')) {
+      const [start, end] = timeString.split(' - ');
+      return `${this.formatTo12Hour(start)} - ${this.formatTo12Hour(end)}`;
+    }
+
+    // Handle special cases
+    if (timeString === '23:00') return 'After Dark';
+    if (timeString === '00:00') return 'midnight';
+    if (timeString === '10:00' && timeString.includes('Saturday'))
+      return 'Saturday 10am-5pm';
+
+    // Parse 24-hour format
+    const match = timeString.match(/(\d{1,2}):(\d{2})/);
+    if (!match) return timeString;
+
+    let hour = parseInt(match[1]);
+    const minute = match[2];
+
+    // Convert to 12-hour format
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    if (hour > 12) hour -= 12;
+    if (hour === 0) hour = 12;
+
+    return `${hour}:${minute} ${ampm}`;
+  }
+}
+
 // Dark Mode functionality
 class DarkMode {
   constructor() {
@@ -64,7 +175,10 @@ class DarkMode {
   }
 }
 
-// Helper function to convert 12-hour time to 24-hour format
+// Global time format instance
+let timeFormat;
+
+// Helper function to convert 12-hour time to 24-hour format (for sorting)
 function convertTo24Hour(time12h) {
   // Handle time ranges (e.g., "10:00 AM - 5:00 PM")
   if (time12h.includes(' - ')) {
@@ -75,6 +189,7 @@ function convertTo24Hour(time12h) {
   // Handle special cases
   if (time12h === 'After Dark') return '23:00';
   if (time12h === 'All Weekend') return '00:00';
+  if (time12h === 'midnight') return '00:00';
   if (time12h.includes('Saturday')) return '10:00';
 
   // Parse 12-hour format
@@ -90,35 +205,6 @@ function convertTo24Hour(time12h) {
   if (ampm === 'AM' && hour === 12) hour = 0;
 
   return `${hour.toString().padStart(2, '0')}:${minute}`;
-}
-
-// Helper function to convert 24-hour time to 12-hour display format
-function formatTimeDisplay(time24h) {
-  // Handle time ranges
-  if (time24h.includes(' - ')) {
-    const [start, end] = time24h.split(' - ');
-    return `${formatTimeDisplay(start)} - ${formatTimeDisplay(end)}`;
-  }
-
-  // Handle special cases
-  if (time24h === '23:00') return 'After Dark';
-  if (time24h === '00:00') return 'All Weekend';
-  if (time24h === '10:00' && time24h.includes('Saturday'))
-    return 'Saturday 10am-5pm';
-
-  // Parse 24-hour format
-  const match = time24h.match(/(\d{1,2}):(\d{2})/);
-  if (!match) return time24h;
-
-  let hour = parseInt(match[1]);
-  const minute = match[2];
-
-  // Convert to 12-hour format
-  const ampm = hour >= 12 ? 'PM' : 'AM';
-  if (hour > 12) hour -= 12;
-  if (hour === 0) hour = 12;
-
-  return `${hour}:${minute} ${ampm}`;
 }
 
 function renderSchedule(filteredEvents = events) {
@@ -170,9 +256,9 @@ function renderSchedule(filteredEvents = events) {
 
         html += `
           <div class="event">
-            <div class="event-time">${formatTimeDisplay(
-              convertTo24Hour(event.time)
-            )}</div>
+            <div class="event-time">${
+              timeFormat ? timeFormat.formatTime(event.time) : event.time
+            }</div>
             <div class="event-title">${event.title}</div>
             <div class="event-location ${locationClass}">${displayLocation}</div>
             ${
@@ -250,6 +336,9 @@ function populateCategoryFilter() {
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
+  // Initialize time format
+  timeFormat = new TimeFormat();
+
   // Initialize dark mode
   new DarkMode();
 

@@ -153,6 +153,38 @@ input:focus {
   border-color: #667eea;
 }
 
+.time-format-toggle {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.time-format-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.time-format-icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.time-format-toggle:hover .time-format-icon {
+  transform: rotate(10deg);
+}
+
 .search-box {
   flex: 1;
   min-width: 200px;
@@ -306,6 +338,17 @@ input:focus {
 
   h1 {
     font-size: 2rem;
+  }
+
+  .time-format-toggle {
+    width: 40px;
+    height: 40px;
+    top: 65px;
+    right: 15px;
+  }
+
+  .time-format-icon {
+    font-size: 1.2rem;
   }
 
   .dark-mode-toggle {
