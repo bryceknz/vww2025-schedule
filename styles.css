@@ -73,11 +73,11 @@ h1 {
   font-size: 2.5rem;
 }
 
-/* Header toggle buttons - shared styles */
+/* Floating toggle buttons - shared styles */
 .header-toggle {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: fixed;
+  background: rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -87,11 +87,12 @@ h1 {
   justify-content: center;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  z-index: 1000;
 }
 
 .header-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .header-toggle-icon {
@@ -110,7 +111,7 @@ h1 {
 }
 
 .time-format-toggle {
-  top: 80px;
+  bottom: 20px;
   right: 20px;
 }
 
@@ -324,13 +325,13 @@ input:focus {
     font-size: 1.2rem;
   }
 
-  .time-format-toggle {
-    top: 65px;
+  .dark-mode-toggle {
+    top: 15px;
     right: 15px;
   }
 
-  .dark-mode-toggle {
-    top: 15px;
+  .time-format-toggle {
+    bottom: 15px;
     right: 15px;
   }
 

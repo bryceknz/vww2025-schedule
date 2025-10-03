@@ -349,7 +349,10 @@ function renderSchedule(filteredEvents = events) {
   const dayOrder = ['friday', 'saturday', 'sunday', 'all'];
   dayOrder.forEach(day => {
     if (eventsByDay[day] && eventsByDay[day].length > 0) {
-      const dayName = day.charAt(0).toUpperCase() + day.slice(1);
+      const dayName =
+        day === 'all'
+          ? 'All Weekend'
+          : day.charAt(0).toUpperCase() + day.slice(1);
       html += `
         <div class="day-section">
           <div class="day-header">${dayName}</div>
@@ -421,6 +424,44 @@ function filterEvents() {
   renderSchedule(filtered);
 }
 
+// Update day filter to hide past days
+function updateDayFilter() {
+  const dayFilter = document.getElementById('dayFilter');
+  const now = new Date();
+  const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+  // Map day names to day numbers (assuming festival starts on Friday)
+  const dayMap = {
+    friday: 5, // Friday = 5
+    saturday: 6, // Saturday = 6
+    sunday: 0, // Sunday = 0
+  };
+
+  // Clear existing options except "All Days"
+  const allDaysOption = dayFilter.querySelector('option[value="all"]');
+  dayFilter.innerHTML = '';
+  dayFilter.appendChild(allDaysOption);
+
+  // Add day options, hiding past days
+  const dayOptions = [
+    { value: 'friday', label: 'Friday' },
+    { value: 'saturday', label: 'Saturday' },
+    { value: 'sunday', label: 'Sunday' },
+  ];
+
+  dayOptions.forEach(day => {
+    const eventDay = dayMap[day.value];
+
+    // Only show the day if it's today or in the future
+    if (currentDay <= eventDay) {
+      const option = document.createElement('option');
+      option.value = day.value;
+      option.textContent = day.label;
+      dayFilter.appendChild(option);
+    }
+  });
+}
+
 // Populate location filter dropdown dynamically
 function populateLocationFilter() {
   const locationFilter = document.getElementById('locationFilter');
@@ -456,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
   new DarkMode();
 
   // Populate filters
+  updateDayFilter();
   populateLocationFilter();
   populateCategoryFilter();
 

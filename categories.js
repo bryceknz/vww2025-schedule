@@ -38,7 +38,7 @@ const categories = {
   Other: {
     name: 'Other',
     description: 'Miscellaneous activities and information',
-    icon: '📌',
+    icon: '⭐',
   },
 };
 
