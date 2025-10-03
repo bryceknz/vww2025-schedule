@@ -9,7 +9,10 @@
     <meta name="theme-color" content="#667eea" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="VWW 2025" />
+    <meta
+      name="apple-mobile-web-app-title"
+      content="Vegan Wellbeing Weekend 2025"
+    />
     <meta
       name="description"
       content="Schedule and information for Vegan Wellbeing Weekend 2025"
@@ -112,7 +115,7 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker
-            .register('/sw.js')
+            .register('./sw.js')
             .then(registration => {
               console.log('SW registered: ', registration);
             })
