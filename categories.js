@@ -5,6 +5,11 @@ const categories = {
     description: 'Creative activities and hands-on workshops',
     icon: '🎨',
   },
+  Dance: {
+    name: 'Dance',
+    description: 'Dance workshops and activities',
+    icon: '💃🏼',
+  },
   Education: {
     name: 'Education',
     description: 'Workshops, talks, and learning sessions',

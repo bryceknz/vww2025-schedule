@@ -202,7 +202,7 @@ const events = [
     time: '2:00 PM',
     title: 'Charleston Dance w/ Becky Lamley',
     location: 'sports-hall',
-    category: 'Physical Activity',
+    category: 'Dance',
   },
   {
     day: 'saturday',
@@ -288,7 +288,7 @@ const events = [
     time: '5:00 PM',
     title: 'Belly Dancing w/ Nina',
     location: 'sports-hall',
-    category: 'Physical Activity',
+    category: 'Dance',
   },
   {
     day: 'saturday',
@@ -310,7 +310,7 @@ const events = [
     time: '7:30 PM',
     title: 'Live Music',
     location: 'main-dining',
-    category: 'Entertainment',
+    category: 'Music',
     description: 'Bands to start at 7:30PM, followed by Kevin the DJ.',
   },
   {
