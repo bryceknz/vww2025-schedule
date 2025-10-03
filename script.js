@@ -217,29 +217,43 @@ let timeFormat;
 // Helper function to check if an event has already passed
 function isEventPast(event) {
   const now = new Date();
-  const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const currentDayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
   const currentTime = now.getHours() * 60 + now.getMinutes(); // Current time in minutes
 
-  // Map day names to day numbers (assuming festival starts on Friday)
+  // Convert JavaScript day to festival day (1-based indexing)
+  // JavaScript: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  // Festival: 1=Fri, 2=Sat, 3=Sun, 4=All Weekend
+  const jsToFestivalDay = {
+    5: 1, // Friday
+    6: 2, // Saturday
+    0: 3, // Sunday
+  };
+
+  const currentFestivalDay = jsToFestivalDay[currentDayOfWeek];
+
+  // Map day names to festival day numbers (1-based indexing)
   const dayMap = {
-    friday: 5, // Friday = 5
-    saturday: 6, // Saturday = 6
-    sunday: 0, // Sunday = 0
-    all: -1, // Special case for all-day events
+    friday: 1, // Friday = 1
+    saturday: 2, // Saturday = 2
+    sunday: 3, // Sunday = 3
+    all: 4, // All Weekend = 4
   };
 
   const eventDay = dayMap[event.day];
 
   // Handle special cases
-  if (eventDay === -1) return false; // Don't hide "all weekend" events
+  if (eventDay === 4) return false; // Don't hide "all weekend" events
   if (event.time === 'After Dark') return false; // Don't hide "After Dark" events
   if (event.time === 'All Weekend') return false; // Don't hide "All Weekend" events
 
+  // If current day is not a festival day (Mon-Thu), don't hide any events
+  if (currentFestivalDay === undefined) return false;
+
   // If we're past the event day, it's definitely past
-  if (currentDay > eventDay) return true;
+  if (currentFestivalDay > eventDay) return true;
 
   // If we're on the same day, check the time
-  if (currentDay === eventDay) {
+  if (currentFestivalDay === eventDay) {
     // Handle time ranges (e.g., "10:00 AM - 5:00 PM")
     if (event.time.includes(' - ')) {
       const [startTime, endTime] = event.time.split(' - ');
@@ -256,18 +270,7 @@ function isEventPast(event) {
   }
 
   // If we're before the event day, it's in the future
-  // But we need to handle the case where current day is Sunday (0) and event is Friday (5)
-  // In this case, Friday is actually in the future (next week)
-  if (currentDay < eventDay) {
-    // Special case: if current day is Sunday and event is Friday,
-    // it could be next week's Friday, so don't hide it
-    if (currentDay === 0 && eventDay === 5) {
-      return false; // Don't hide next week's Friday events
-    }
-    return false; // Event is in the future
-  }
-
-  return false; // Event is in the future
+  return false;
 }
 
 // Helper function to parse time string to minutes since midnight
@@ -435,13 +438,24 @@ function filterEvents() {
 function updateDayFilter() {
   const dayFilter = document.getElementById('dayFilter');
   const now = new Date();
-  const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const currentDayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-  // Map day names to day numbers (assuming festival starts on Friday)
+  // Convert JavaScript day to festival day (1-based indexing)
+  // JavaScript: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  // Festival: 1=Fri, 2=Sat, 3=Sun, 4=All Weekend
+  const jsToFestivalDay = {
+    5: 1, // Friday
+    6: 2, // Saturday
+    0: 3, // Sunday
+  };
+
+  const currentFestivalDay = jsToFestivalDay[currentDayOfWeek];
+
+  // Map day names to festival day numbers (1-based indexing)
   const dayMap = {
-    friday: 5, // Friday = 5
-    saturday: 6, // Saturday = 6
-    sunday: 0, // Sunday = 0
+    friday: 1, // Friday = 1
+    saturday: 2, // Saturday = 2
+    sunday: 3, // Sunday = 3
   };
 
   // Clear existing options except "All Days"
@@ -460,7 +474,8 @@ function updateDayFilter() {
     const eventDay = dayMap[day.value];
 
     // Only show the day if it's today or in the future
-    if (currentDay <= eventDay) {
+    // If current day is not a festival day (Mon-Thu), show all days
+    if (currentFestivalDay === undefined || currentFestivalDay <= eventDay) {
       const option = document.createElement('option');
       option.value = day.value;
       option.textContent = day.label;
