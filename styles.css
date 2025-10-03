@@ -1,0 +1,251 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+select,
+input {
+  padding: 8px 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+}
+
+.day-section {
+  margin-bottom: 40px;
+}
+
+.day-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px 10px 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.events-container {
+  background: white;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.event {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s;
+}
+
+.event:hover {
+  background-color: #f8f9fa;
+}
+
+.event:last-child {
+  border-bottom: none;
+}
+
+.event-time {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.event-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.event-location {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.event-description {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Location color coding */
+.location-potting-shed {
+  background-color: #e8f5e8;
+  color: #2d5a2d;
+}
+.location-sports-hall {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.location-outside {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+.location-small-dining {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.location-large-dining {
+  background-color: #d4edda;
+  color: #155724;
+}
+.location-foyer {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+.location-holistic {
+  background-color: #fce4ec;
+  color: #880e4f;
+}
+.location-main-dining {
+  background-color: #e8eaf6;
+  color: #3f51b5;
+}
+.location-front-of-house {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.location-bell-tent {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+.location-library {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+.location-conference-room {
+  background-color: #fce4ec;
+  color: #880e4f;
+}
+.location-Camping {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.location-House {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.no-events {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}
+
+.current-time {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 10px 20px;
+  margin: 20px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .search-box {
+    min-width: auto;
+  }
+
+  .event {
+    padding: 12px 15px;
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  color: #666;
+  font-size: 0.9rem;
+}

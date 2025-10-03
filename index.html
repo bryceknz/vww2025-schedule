@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VWW 2026 Festival Schedule</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>VWW 2026 Festival</h1>
+        <p class="subtitle">Your Complete Weekend Schedule</p>
+      </header>
+
+      <div class="controls">
+        <div class="filter-group">
+          <label for="dayFilter">Day</label>
+          <select id="dayFilter">
+            <option value="all">All Days</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+            <option value="sunday">Sunday</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="categoryFilter">Category</label>
+          <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <!-- Options will be populated dynamically by JavaScript -->
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="locationFilter">Location</label>
+          <select id="locationFilter">
+            <option value="all">All Locations</option>
+            <!-- Options will be populated dynamically by JavaScript -->
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="searchBox">Search</label>
+          <input
+            type="text"
+            id="searchBox"
+            class="search-box"
+            placeholder="Search activities..."
+          />
+        </div>
+      </div>
+
+      <div id="schedule"></div>
+
+      <div class="footer">
+        <p>Vegan Wellbeing Weekend 2026 Festival Schedule • Built by AI</p>
+      </div>
+    </div>
+
+    <!-- External JavaScript files -->
+    <script src="categories.js"></script>
+    <script src="locations.js"></script>
+    <script src="events.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
