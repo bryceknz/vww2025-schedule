@@ -276,7 +276,7 @@ function isEventPast(event) {
 // Helper function to parse time string to minutes since midnight
 function parseTimeToMinutes(timeStr) {
   // Handle special cases
-  if (timeStr === 'midnight') return 0;
+  if (timeStr === 'midnight') return 24 * 60; // End of day (1440 minutes)
   if (timeStr === 'After Dark') return 23 * 60; // 11 PM
 
   // Parse standard time format (e.g., "7:30 AM", "6:00 PM")
@@ -420,7 +420,10 @@ function filterEvents() {
         locationMap[event.location].toLowerCase().includes(searchTerm)) ||
       (event.category &&
         getCategoryName(event.category).toLowerCase().includes(searchTerm));
-    const isNotPast = !isEventPast(event);
+    
+    // Only filter out past events when showing "All Days"
+    // When user manually selects a specific day, show ALL events for that day
+    const isNotPast = dayFilter === 'all' ? !isEventPast(event) : true;
 
     return (
       matchesDay &&
