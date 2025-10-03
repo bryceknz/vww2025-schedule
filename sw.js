@@ -1,24 +1,25 @@
 // Service Worker for Vegan Wellbeing Weekend 2025 PWA
 // Optimized for venues with poor internet connectivity
 const CACHE_NAME = 'vww2025-v1.0.0';
-const OFFLINE_URL = 'offline.html';
+const OFFLINE_URL = '/offline.html';
 
 // Files to cache for offline use - ALL critical files
+// Use absolute paths for better Vercel compatibility
 const STATIC_CACHE_URLS = [
-  './',
-  './index.html',
-  './styles.min.css',
-  './script.min.js',
-  './events.min.js',
-  './categories.min.js',
-  './locations.min.js',
-  './offline.html',
-  './manifest.json',
+  '/',
+  '/index.html',
+  '/styles.min.css',
+  '/script.min.js',
+  '/events.min.js',
+  '/categories.min.js',
+  '/locations.min.js',
+  '/offline.html',
+  '/manifest.json',
   // Cache all icons for offline use
-  './icons/icon-16x16.png',
-  './icons/icon-32x32.png',
-  './icons/icon-192x192.png',
-  './icons/icon-512x512.png',
+  '/icons/icon-16x16.png',
+  '/icons/icon-32x32.png',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
 ];
 
 // Install event - AGGRESSIVELY cache ALL static assets for poor connectivity
@@ -135,12 +136,12 @@ self.addEventListener('fetch', event => {
 
           // For navigation requests, show offline page
           if (event.request.mode === 'navigate') {
-            return caches.match(OFFLINE_URL) || caches.match('./index.html');
+            return caches.match(OFFLINE_URL) || caches.match('/index.html');
           }
 
           // For other requests, try to return a fallback or show offline page
           if (event.request.url.includes('.html')) {
-            return caches.match('./index.html');
+            return caches.match('/index.html');
           }
 
           // For CSS/JS files, return a basic response to prevent app breaking
@@ -177,8 +178,8 @@ self.addEventListener('push', event => {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: './icons/icon-192x192.png',
-      badge: './icons/icon-32x32.png',
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/icon-32x32.png',
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
@@ -194,5 +195,5 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', event => {
   event.notification.close();
 
-  event.waitUntil(clients.openWindow('./'));
+  event.waitUntil(clients.openWindow('/'));
 });

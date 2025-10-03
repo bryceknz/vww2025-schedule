@@ -111,17 +111,33 @@
 
     <!-- PWA Service Worker Registration -->
     <script>
-      // Register service worker
+      // Register service worker with Vercel-compatible path handling
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('./sw.js')
-            .then(registration => {
-              console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-              console.log('SW registration failed: ', registrationError);
-            });
+          // Try multiple paths to ensure compatibility with different deployment environments
+          const swPaths = ['./sw.js', '/sw.js', 'sw.js'];
+          let registrationAttempted = false;
+
+          const tryRegisterSW = (pathIndex = 0) => {
+            if (pathIndex >= swPaths.length || registrationAttempted) return;
+
+            navigator.serviceWorker
+              .register(swPaths[pathIndex])
+              .then(registration => {
+                console.log('SW registered successfully: ', registration);
+                registrationAttempted = true;
+              })
+              .catch(registrationError => {
+                console.log(
+                  `SW registration failed for ${swPaths[pathIndex]}: `,
+                  registrationError
+                );
+                // Try next path
+                tryRegisterSW(pathIndex + 1);
+              });
+          };
+
+          tryRegisterSW();
         });
       }
 
