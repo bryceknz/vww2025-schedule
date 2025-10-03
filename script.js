@@ -5,7 +5,7 @@ class TimeFormat {
   constructor() {
     this.toggleButton = document.getElementById('timeFormatToggle');
     this.toggleIcon = this.toggleButton?.querySelector('.header-toggle-icon');
-    this.storageKey = 'vww2026-time-format';
+    this.storageKey = 'vww2025-time-format';
     this.currentFormat = '12hr'; // Default to 12-hour format
     this.init();
   }
@@ -35,8 +35,20 @@ class TimeFormat {
     this.updateButtonDisplay();
     localStorage.setItem(this.storageKey, this.currentFormat);
 
+    // Add click animation
+    this.animateClick();
+
     // Re-render the schedule with new time format
     filterEvents();
+  }
+
+  animateClick() {
+    if (this.toggleButton) {
+      this.toggleButton.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        this.toggleButton.style.transform = 'scale(1)';
+      }, 150);
+    }
   }
 
   updateButtonDisplay() {
@@ -116,7 +128,7 @@ class DarkMode {
   constructor() {
     this.toggleButton = document.getElementById('darkModeToggle');
     this.toggleIcon = this.toggleButton?.querySelector('.header-toggle-icon');
-    this.storageKey = 'vww2026-theme-preference';
+    this.storageKey = 'vww2025-theme-preference';
     this.init();
   }
 
@@ -160,6 +172,18 @@ class DarkMode {
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     this.applyTheme(newTheme);
     localStorage.setItem(this.storageKey, newTheme);
+
+    // Add click animation
+    this.animateClick();
+  }
+
+  animateClick() {
+    if (this.toggleButton) {
+      this.toggleButton.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        this.toggleButton.style.transform = 'scale(1)';
+      }, 150);
+    }
   }
 
   applyTheme(theme) {
