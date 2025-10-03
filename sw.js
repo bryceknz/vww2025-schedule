@@ -7,23 +7,17 @@ const OFFLINE_URL = 'offline.html';
 const STATIC_CACHE_URLS = [
   '/',
   '/index.html',
-  '/styles.css',
-  '/script.js',
-  '/events.js',
-  '/categories.js',
-  '/locations.js',
+  '/styles.min.css',
+  '/script.min.js',
+  '/events.min.js',
+  '/categories.min.js',
+  '/locations.min.js',
   '/offline.html',
   '/manifest.json',
   // Cache all icons for offline use
   '/icons/icon-16x16.png',
   '/icons/icon-32x32.png',
-  '/icons/icon-72x72.png',
-  '/icons/icon-96x96.png',
-  '/icons/icon-128x128.png',
-  '/icons/icon-144x144.png',
-  '/icons/icon-152x152.png',
   '/icons/icon-192x192.png',
-  '/icons/icon-384x384.png',
   '/icons/icon-512x512.png',
 ];
 
@@ -184,7 +178,7 @@ self.addEventListener('push', event => {
     const options = {
       body: data.body,
       icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-72x72.png',
+      badge: '/icons/icon-32x32.png',
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
