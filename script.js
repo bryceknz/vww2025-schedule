@@ -107,6 +107,11 @@ class TimeFormat {
     if (timeString === '10:00' && timeString.includes('Saturday'))
       return 'Saturday 10am-5pm';
 
+    // If already in 12-hour format (contains AM/PM), return as-is
+    if (timeString.includes('AM') || timeString.includes('PM')) {
+      return timeString;
+    }
+
     // Parse 24-hour format
     const match = timeString.match(/(\d{1,2}):(\d{2})/);
     if (!match) return timeString;
@@ -201,6 +206,83 @@ class DarkMode {
 
 // Global time format instance
 let timeFormat;
+
+// Helper function to check if an event has already passed
+function isEventPast(event) {
+  const now = new Date();
+  const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const currentTime = now.getHours() * 60 + now.getMinutes(); // Current time in minutes
+
+  // Map day names to day numbers (assuming festival starts on Friday)
+  const dayMap = {
+    friday: 5, // Friday = 5
+    saturday: 6, // Saturday = 6
+    sunday: 0, // Sunday = 0
+    all: -1, // Special case for all-day events
+  };
+
+  const eventDay = dayMap[event.day];
+
+  // Handle special cases
+  if (eventDay === -1) return false; // Don't hide "all weekend" events
+  if (event.time === 'After Dark') return false; // Don't hide "After Dark" events
+  if (event.time === 'All Weekend') return false; // Don't hide "All Weekend" events
+
+  // If we're past the event day, it's definitely past
+  if (currentDay > eventDay) return true;
+
+  // If we're on the same day, check the time
+  if (currentDay === eventDay) {
+    // Handle time ranges (e.g., "10:00 AM - 5:00 PM")
+    if (event.time.includes(' - ')) {
+      const [startTime, endTime] = event.time.split(' - ');
+      const startMinutes = parseTimeToMinutes(startTime);
+      const endMinutes = parseTimeToMinutes(endTime);
+
+      // If current time is past the end time, event is over
+      return currentTime > endMinutes;
+    }
+
+    // Handle single times
+    const eventMinutes = parseTimeToMinutes(event.time);
+    return currentTime > eventMinutes;
+  }
+
+  // If we're before the event day, it's in the future
+  // But we need to handle the case where current day is Sunday (0) and event is Friday (5)
+  // In this case, Friday is actually in the future (next week)
+  if (currentDay < eventDay) {
+    // Special case: if current day is Sunday and event is Friday,
+    // it could be next week's Friday, so don't hide it
+    if (currentDay === 0 && eventDay === 5) {
+      return false; // Don't hide next week's Friday events
+    }
+    return false; // Event is in the future
+  }
+
+  return false; // Event is in the future
+}
+
+// Helper function to parse time string to minutes since midnight
+function parseTimeToMinutes(timeStr) {
+  // Handle special cases
+  if (timeStr === 'midnight') return 0;
+  if (timeStr === 'After Dark') return 23 * 60; // 11 PM
+
+  // Parse standard time format (e.g., "7:30 AM", "6:00 PM")
+  const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!match) return 0;
+
+  let hour = parseInt(match[1]);
+  const minute = parseInt(match[2]);
+  const ampm = match[3].toUpperCase();
+
+  // Convert to 24-hour format
+  if (ampm === 'PM' && hour !== 12) hour += 12;
+  if (ampm === 'AM' && hour === 12) hour = 0;
+
+  return hour * 60 + minute;
+}
 
 // Helper function to convert 12-hour time to 24-hour format (for sorting)
 function convertTo24Hour(time12h) {
@@ -325,8 +407,15 @@ function filterEvents() {
         locationMap[event.location].toLowerCase().includes(searchTerm)) ||
       (event.category &&
         getCategoryName(event.category).toLowerCase().includes(searchTerm));
+    const isNotPast = !isEventPast(event);
 
-    return matchesDay && matchesLocation && matchesCategory && matchesSearch;
+    return (
+      matchesDay &&
+      matchesLocation &&
+      matchesCategory &&
+      matchesSearch &&
+      isNotPast
+    );
   });
 
   renderSchedule(filtered);
@@ -380,6 +469,6 @@ document.addEventListener('DOMContentLoaded', function () {
     .addEventListener('change', filterEvents);
   document.getElementById('searchBox').addEventListener('input', filterEvents);
 
-  // Initial render
-  renderSchedule();
+  // Initial render with past events filtering
+  filterEvents();
 });
