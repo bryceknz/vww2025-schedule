@@ -1,6 +1,6 @@
 // Service Worker for Vegan Wellbeing Weekend 2025 PWA
 // Optimized for venues with poor internet connectivity
-const CACHE_NAME = 'vww2025-v1.0.1';
+const CACHE_NAME = 'vww2025-v1.0.2';
 const OFFLINE_URL = '/offline.html';
 
 // Files to cache for offline use - ALL critical files
@@ -84,10 +84,11 @@ self.addEventListener('fetch', event => {
 
   event.respondWith(
     caches.match(event.request).then(response => {
-      // For HTML files, always try network first to get updates
+      // For main HTML file only, try network first to get updates
+      // Skip this for offline.html and other special pages
       if (
-        event.request.url.includes('.html') ||
-        event.request.url.endsWith('/')
+        (event.request.url.endsWith('/') || event.request.url.endsWith('/index.html')) &&
+        !event.request.url.includes('offline.html')
       ) {
         return fetch(event.request)
           .then(fetchResponse => {
