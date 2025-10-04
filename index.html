@@ -35,7 +35,7 @@
     />
 
     <title>Vegan Wellbeing Weekend 2025 Schedule</title>
-    <link rel="stylesheet" href="styles.min.css?v=1.2" />
+    <link rel="stylesheet" href="styles.min.css?v=1.3" />
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>
@@ -104,10 +104,10 @@
     </div>
 
     <!-- External JavaScript files -->
-    <script src="categories.min.js?v=1.0"></script>
-    <script src="locations.min.js?v=1.0"></script>
-    <script src="events.min.js?v=1.0"></script>
-    <script src="script.min.js?v=1.0"></script>
+    <script src="categories.min.js?v=1.3"></script>
+    <script src="locations.min.js?v=1.3"></script>
+    <script src="events.min.js?v=1.3"></script>
+    <script src="script.min.js?v=1.3"></script>
 
     <!-- PWA Service Worker Registration -->
     <script>
@@ -126,6 +126,30 @@
               .then(registration => {
                 console.log('SW registered successfully: ', registration);
                 registrationAttempted = true;
+
+                // Store registration globally for manual refresh checks
+                serviceWorkerRegistration = registration;
+
+                // Check for updates immediately on app load
+                checkForUpdates(registration);
+
+                // Listen for service worker updates
+                registration.addEventListener('updatefound', () => {
+                  console.log('🔄 New service worker version found!');
+                  const newWorker = registration.installing;
+
+                  newWorker.addEventListener('statechange', () => {
+                    if (
+                      newWorker.state === 'installed' &&
+                      navigator.serviceWorker.controller
+                    ) {
+                      // New service worker is installed and ready
+                      console.log(
+                        'New service worker ready - will activate on next page load'
+                      );
+                    }
+                  });
+                });
               })
               .catch(registrationError => {
                 console.log(
@@ -140,6 +164,18 @@
           tryRegisterSW();
         });
       }
+
+      // Function to check for service worker updates
+      function checkForUpdates(registration) {
+        if (registration) {
+          registration.update().catch(error => {
+            console.log('Update check failed:', error);
+          });
+        }
+      }
+
+      // Store registration globally for manual refresh checks
+      let serviceWorkerRegistration = null;
 
       // PWA Install Prompt
       let deferredPrompt;

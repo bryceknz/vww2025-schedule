@@ -1,6 +1,6 @@
 // Service Worker for Vegan Wellbeing Weekend 2025 PWA
 // Optimized for venues with poor internet connectivity
-const CACHE_NAME = 'vww2025-v1.0.2';
+const CACHE_NAME = 'vww2025-v1.0.3';
 const OFFLINE_URL = '/offline.html';
 
 // Files to cache for offline use - ALL critical files
@@ -36,7 +36,7 @@ self.addEventListener('install', event => {
         console.log(
           '✅ ALL static assets cached successfully - app ready for offline use'
         );
-        // Force activation immediately
+        // Force activation immediately to ensure updates are applied
         return self.skipWaiting();
       })
       .catch(error => {
@@ -66,6 +66,17 @@ self.addEventListener('activate', event => {
       .then(() => {
         console.log('Service Worker activated');
         return self.clients.claim();
+      })
+      .then(() => {
+        // Notify all clients that a new service worker is active
+        return self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({
+              type: 'SW_ACTIVATED',
+              message: 'New service worker is now active',
+            });
+          });
+        });
       })
   );
 });
@@ -225,4 +236,11 @@ self.addEventListener('notificationclick', event => {
   event.notification.close();
 
   event.waitUntil(clients.openWindow('/'));
+});
+
+// Handle messages from main thread
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

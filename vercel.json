@@ -5,11 +5,24 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
+          "value": "public, max-age=0, must-revalidate, no-cache, no-store"
         },
         {
           "key": "Service-Worker-Allowed",
           "value": "/"
+        },
+        {
+          "key": "ETag",
+          "value": "W/\"v1.0.3\""
+        }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
         }
       ]
     },
@@ -22,7 +35,7 @@
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public, max-age=0, must-revalidate"
         }
       ]
     },
