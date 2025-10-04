@@ -231,6 +231,8 @@ input:focus {
   color: var(--text-secondary);
   font-size: 0.95rem;
   transition: color 0.3s ease;
+  white-space: pre-line;
+  line-height: 1.5;
 }
 
 /* Location color coding */

@@ -102,7 +102,7 @@ class TimeFormat {
     }
 
     // Handle special cases
-    if (timeString === '23:00') return 'After Dark';
+    if (timeString === '18:30') return 'After Dark';
     if (timeString === '00:00') return 'midnight';
     if (timeString === '10:00' && timeString.includes('Saturday'))
       return 'Saturday 10am-5pm';
@@ -277,7 +277,7 @@ function isEventPast(event) {
 function parseTimeToMinutes(timeStr) {
   // Handle special cases
   if (timeStr === 'midnight') return 24 * 60; // End of day (1440 minutes)
-  if (timeStr === 'After Dark') return 23 * 60; // 11 PM
+  if (timeStr === 'After Dark') return 18 * 60 + 30; // 6:30 PM
 
   // Parse standard time format (e.g., "7:30 AM", "6:00 PM")
   const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
@@ -303,7 +303,7 @@ function convertTo24Hour(time12h) {
   }
 
   // Handle special cases
-  if (time12h === 'After Dark') return '23:00';
+  if (time12h === 'After Dark') return '18:30';
   if (time12h === 'All Weekend') return '00:00';
   if (time12h === 'midnight') return '00:00';
   if (time12h.includes('Saturday')) return '10:00';
@@ -382,7 +382,10 @@ function renderSchedule(filteredEvents = events) {
             <div class="event-location ${locationClass}">${displayLocation}</div>
             ${
               event.description
-                ? `<div class="event-description">${event.description}</div>`
+                ? `<div class="event-description">${event.description.replace(
+                    /\n/g,
+                    '\n'
+                  )}</div>`
                 : ''
             }
           </div>

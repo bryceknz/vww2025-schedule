@@ -309,9 +309,15 @@ const events = [
     day: 'saturday',
     time: '7:00 PM - midnight',
     title: 'Live Music',
-    location: 'main-dining',
+    location: 'foyer',
     category: 'Music',
-    description: 'Full schedule:',
+    description: `Full schedule:
+7:00 PM - Alan Jackson (Acoustic Folk)
+7:50 PM - Owen Chambers (Intimate Piano & Vocals)
+8:30 PM - Zoe + Bryce (Eclectic Covers)
+9:20 PM - Dippy Bamba (Energetic Folk)
+10:10 PM - Sweet Goose (Singer-songwriter folk)
+11:00 PM - Vegan Queen V (The Legend Herself)`,
   },
   {
     day: 'saturday',
