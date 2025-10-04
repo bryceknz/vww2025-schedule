@@ -74,7 +74,7 @@ class TimeFormat {
     }
 
     // Handle special cases
-    if (timeString === 'After Dark') return '23:00';
+    if (timeString === 'After Dark') return '18:30';
     if (timeString === 'All Weekend') return '00:00';
     if (timeString === 'midnight') return '00:00';
     if (timeString.includes('Saturday')) return '10:00';

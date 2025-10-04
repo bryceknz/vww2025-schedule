@@ -307,11 +307,20 @@ const events = [
   },
   {
     day: 'saturday',
-    time: '7:30 PM',
+    time: '7:00 PM - midnight',
     title: 'Live Music',
     location: 'main-dining',
     category: 'Music',
-    description: 'Bands to start at 7:30PM, followed by Kevin the DJ.',
+    description: 'Full schedule:',
+  },
+  {
+    day: 'saturday',
+    time: '11:59 PM',
+    title: 'After Party',
+    location: 'main-dining',
+    category: 'Music',
+    description:
+      'Kevin the DJ serving vegan vibes on the dance floor until 1:00 AM.',
   },
   {
     day: 'saturday',
