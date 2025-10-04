@@ -87,7 +87,8 @@ self.addEventListener('fetch', event => {
       // For main HTML file only, try network first to get updates
       // Skip this for offline.html and other special pages
       if (
-        (event.request.url.endsWith('/') || event.request.url.endsWith('/index.html')) &&
+        (event.request.url.endsWith('/') ||
+          event.request.url.endsWith('/index.html')) &&
         !event.request.url.includes('offline.html')
       ) {
         return fetch(event.request)
