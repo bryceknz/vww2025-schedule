@@ -238,18 +238,6 @@ input:focus {
   hyphens: auto;
 }
 
-/* Special styling for music events with multi-line schedules */
-.event[data-category='Music'] .event-description {
-  font-family: 'Courier New', monospace;
-  background-color: var(--bg-primary);
-  padding: 10px;
-  border-radius: 6px;
-  border-left: 3px solid #667eea;
-  margin-top: 8px;
-  white-space: pre-line;
-  line-height: 1.6;
-}
-
 /* Location color coding */
 .location-potting-shed {
   background-color: #e8f5e8;
