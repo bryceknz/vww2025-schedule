@@ -374,7 +374,7 @@ function renderSchedule(filteredEvents = events) {
         const displayLocation = locationMap[event.location] || event.location;
 
         html += `
-          <div class="event">
+          <div class="event" data-category="${event.category}">
             <div class="event-time">${
               timeFormat ? timeFormat.formatTime(event.time) : event.time
             }</div>

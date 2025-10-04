@@ -233,6 +233,21 @@ input:focus {
   transition: color 0.3s ease;
   white-space: pre-line;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Special styling for music events with multi-line schedules */
+.event[data-category='Music'] .event-description {
+  font-family: 'Courier New', monospace;
+  background-color: var(--bg-primary);
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+  margin-top: 8px;
+  white-space: pre-line;
+  line-height: 1.6;
 }
 
 /* Location color coding */
@@ -476,7 +491,6 @@ input:focus {
   line-height: 1.4;
   flex: 1;
 }
-
 
 @keyframes popupFadeIn {
   from {
