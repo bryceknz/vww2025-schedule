@@ -5,7 +5,6 @@
   "main": "categories.js",
   "scripts": {
     "build": "node minify.js && npx cleancss -o styles.min.css styles.css",
-    "build:dev": "webpack --mode=development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
