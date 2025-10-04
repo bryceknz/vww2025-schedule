@@ -260,13 +260,13 @@ function isEventPast(event) {
       const startMinutes = parseTimeToMinutes(startTime);
       const endMinutes = parseTimeToMinutes(endTime);
 
-      // If current time is past the end time, event is over
-      return currentTime > endMinutes;
+      // Show events for 1 hour (60 minutes) after they end
+      return currentTime > endMinutes + 60;
     }
 
-    // Handle single times
+    // Handle single times - show for 1 hour after the event time
     const eventMinutes = parseTimeToMinutes(event.time);
-    return currentTime > eventMinutes;
+    return currentTime > eventMinutes + 60;
   }
 
   // If we're before the event day, it's in the future
